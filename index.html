@@ -126,7 +126,28 @@
       padding:12px 12px;
       z-index:999
     }
-    .side-nav h4{margin:4px 8px 10px 8px;font-size:.95em;color:#183248;letter-spacing:.2px}
+    .side-nav h4{
+      margin:6px 8px 10px 8px;
+      font-size:.78em;
+      color:#183248;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+      pointer-events:none; /* headings are not clickable */
+      cursor:default;
+    }
+    .side-nav h4::before,
+    .side-nav h4::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:var(--border);
+      opacity:.9;
+    }
     .side-nav a{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;color:var(--fg);text-decoration:none;border:1px solid transparent;transition:all .2s ease}
     .side-nav a .ico{width:22px;display:inline-flex;justify-content:center}
     .side-nav a:hover{background:var(--accent-050);border-color:var(--accent)}
@@ -144,6 +165,17 @@
         position:sticky;top:8px;width:auto;margin:0 0 12px 0;left:auto;right:auto;
         display:flex;gap:8px;overflow:auto;align-items:center
       }
+      .side-nav h4{
+        margin:0 4px;
+        padding:10px 12px;
+        white-space:nowrap;
+        border-left:4px solid var(--accent);
+        border-right:4px solid var(--accent);
+        border-radius:12px;
+        background:rgba(15,132,193,.08);
+      }
+      .side-nav h4::before,
+      .side-nav h4::after{content:none}
       .side-nav a{white-space:nowrap}
       .side-nav .divider{display:none}
       .page.active{margin-left:0}
@@ -1157,48 +1189,10 @@ if(!hasAnyAU && !iseNeo){
   </script>
 
 <script>
-  // PWA: Service Worker (auto-update + auto-refresh)
+  // PWA: Service Worker
   if ("serviceWorker" in navigator) {
-    let refreshing = false;
-
-    window.addEventListener("load", async () => {
-      try {
-        const reg = await navigator.serviceWorker.register("./service-worker.js");
-
-        const triggerUpdate = () => {
-          reg.update().catch(() => {});
-          if (reg.waiting) {
-            reg.waiting.postMessage({ type: "SKIP_WAITING" });
-          }
-        };
-
-        reg.addEventListener("updatefound", () => {
-          const nw = reg.installing;
-          if (!nw) return;
-
-          nw.addEventListener("statechange", () => {
-            if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              // New version is ready → activate it immediately
-              if (reg.waiting) {
-                reg.waiting.postMessage({ type: "SKIP_WAITING" });
-              }
-            }
-          });
-        });
-
-        navigator.serviceWorker.addEventListener("controllerchange", () => {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-
-        // When the app becomes active again, check for updates
-        document.addEventListener("visibilitychange", () => {
-          if (!document.hidden) triggerUpdate();
-        });
-      } catch (e) {
-        // ignore
-      }
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js").catch(() => {});
     });
   }
 </script>
