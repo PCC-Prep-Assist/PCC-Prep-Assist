@@ -1,5 +1,5 @@
 PCC-Prep Assist
-iPhone Usage (without App Store)
+iPhone Usage
 
 This tool is provided as a web-based application and can be used on iPhones
 without installation via the App Store. Usage is performed via Safari and,
