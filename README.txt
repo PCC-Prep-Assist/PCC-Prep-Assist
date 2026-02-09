@@ -9,8 +9,8 @@ after initial setup, the tool can also be used offline.
 📱 Installation on iPhone
 ==================================================
 
-1. 🌐 Open Safari
-   (Installation is only possible via Safari.)
+1. 🌐 Open Safari or Google Chrome
+
 
 2. 🔗 Open the tool URL
    Example:
