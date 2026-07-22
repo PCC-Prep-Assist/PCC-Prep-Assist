@@ -1,0 +1,11 @@
+{
+  "name": "pcc-prep-assist",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-app.mjs && node scripts/inline-assets.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run build && npm test && node --check assets/app.js && node scripts/verify-package.mjs"
+  }
+}

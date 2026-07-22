@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071426" />
+    <title>PCC Prep Assist aktualisieren</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
+      body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: #071426; color: #f4f8ff; }
+      main { width: min(440px, calc(100% - 48px)); padding: 32px; border: 1px solid #29415f; border-radius: 22px; background: #0d1d31; text-align: center; }
+      h1 { margin: 0 0 10px; font-size: 25px; }
+      p { margin: 0; color: #9eb0c7; line-height: 1.55; }
+      .spinner { width: 34px; height: 34px; margin: 24px auto; border: 3px solid #29415f; border-top-color: #5d9cff; border-radius: 50%; animation: spin .8s linear infinite; }
+      a { display: inline-block; margin-top: 22px; color: #78adff; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>App wird aktualisiert</h1>
+      <p id="status">Der alte PCC-Cache wird entfernt und Version 4.0.0 geladen.</p>
+      <div class="spinner" aria-hidden="true"></div>
+      <a href="./index.html?appVersion=4.0.0">Jetzt zur App</a>
+    </main>
+    <script>
+      (async () => {
+        try {
+          if ("serviceWorker" in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(
+              registrations
+                .filter((registration) => registration.scope.startsWith(new URL("./", location.href).href))
+                .map((registration) => registration.unregister()),
+            );
+          }
+          if ("caches" in window) {
+            const keys = await caches.keys();
+            await Promise.all(
+              keys.filter((key) => key.startsWith("pcc-prep-")).map((key) => caches.delete(key)),
+            );
+          }
+          const url = new URL("./index.html", location.href);
+          url.searchParams.set("appVersion", "4.0.0");
+          url.searchParams.set("refresh", String(Date.now()));
+          location.replace(url.href);
+        } catch (error) {
+          document.getElementById("status").textContent =
+            "Das automatische Update war nicht möglich. Öffne die App über den Link unten.";
+        }
+      })();
+    </script>
+  </body>
+</html>
